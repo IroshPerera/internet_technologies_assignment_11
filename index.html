@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assignment 11</title>
+
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/home_section.css">
+    <link rel="stylesheet" href="assets/css/customer_section.css">
+    <link rel="stylesheet" href="assets/css/item_section.css">
+    <link rel="stylesheet" href="assets/css/order_section.css">
+    <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
+
+</head>
+<body>
+
+<section class="navigation">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                    aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div id="nav_list" class="navbar-nav">
+                    <a class="nav-link" href="#home"><i class="fa-solid fa-house"></i>Home</a>
+                    <a class="nav-link" href="#customer"><i class="fa-solid fa-person"></i>Customer</a>
+                    <a class="nav-link" href="#item"><i class="fa-solid fa-boxes-stacked"></i>Item</a>
+                    <a class="nav-link" href="#order"><i class="fa-solid fa-cart-shopping"></i>Orders</a>
+
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+</section>
+
+<section class="home_main">
+    <section id="home" class="home">
+
+        <section>
+
+            <div>
+                <button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-person fa-2xl"></i>Customer
+                </button>
+                <button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-boxes-stacked fa-2xl"></i>Items
+                </button>
+                <button type="button" class="btn btn-outline-primary"><i class="fa-solid fa-cart-shopping fa-2xl"></i>Orders
+                </button>
+            </div>
+        </section>
+
+    </section>
+</section>
+
+<section id="customer" class="customer">
+
+    <section>
+        <h1 class="display-1">Customer</h1>
+
+        <form id="customer_form">
+
+
+            <section id="customer_details">
+                <div class="mb-3">
+                    <label for="cust_id" class="form-label">Customer ID</label>
+                    <input id="cust_id" type="text" class="form-control" id="student_id"
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input id="name" type="text" class="form-control" id="name"
+                           aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <input id="address" type="text" class="form-control" id="address" aria-describedby="emailHelp">
+                </div>
+
+                <div class="mb-3">
+                    <label for="contact" class="form-label">Contact</label>
+                    <input id="contact" type="text" class="form-control" id="contact" aria-describedby="emailHelp">
+                </div>
+
+            </section>
+
+            <section id="customer_buttons">
+                <div class="mt-5">
+                    <button id="save_customer" type="button" class="btn btn-outline-success">Save</button>
+                    <button id="update_customer" type="button" class="btn btn-outline-warning">Update</button>
+                    <button id="delete_customer" type="button" class="btn btn-outline-danger">Delete</button>
+                    <button id="customer_reset" type="reset" class="btn btn-outline-secondary">Reset</button>
+                </div>
+
+
+            </section>
+        </form>
+
+    </section>
+
+
+    <section>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Cus_ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Address</th>
+                <th scope="col">Contact</th>
+
+            </tr>
+            </thead>
+            <tbody id="customer-tbl-body">
+            </tbody>
+        </table>
+
+    </section>
+
+</section>
+
+<section id="item" class="item">
+
+    <section>
+        <h1 class="display-1">Item</h1>
+
+        <form id="item_form">
+
+
+            <section id="item_details">
+                <div class="mb-3">
+                    <label for="item_id" class="form-label">Item ID</label>
+                    <input id="item_id" type="number" class="form-control" id="item_id"
+                           aria-describedby="emailHelp">
+                </div>
+
+                <div class="mb-3">
+                    <label for="desc" class="form-label">Description</label>
+                    <input id="desc" type="text" class="form-control" id="desc"
+                           aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price</label>
+                    <input id="price" type="text" class="form-control" id="price" aria-describedby="emailHelp">
+                </div>
+
+                <div class="mb-3">
+                    <label for="qty" class="form-label">Qty.</label>
+                    <input id="qty" type="text" class="form-control" id="qty" aria-describedby="emailHelp">
+                </div>
+
+            </section>
+
+            <section id="item_buttons">
+                <div class="mt-5">
+                    <button id="save_item" type="button" class="btn btn-outline-success">Save</button>
+                    <button id="update_item" type="button" class="btn btn-outline-warning">Update</button>
+                    <button id="delete_item" type="button" class="btn btn-outline-danger">Delete</button>
+                    <button id="item_reset" type="reset" class="btn btn-outline-secondary">Reset</button>
+                </div>
+
+
+            </section>
+        </form>
+
+    </section>
+
+
+    <section>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Item_ID</th>
+                <th scope="col">Desc</th>
+                <th scope="col">Price</th>
+                <th scope="col">Qty.</th>
+
+            </tr>
+            </thead>
+            <tbody id="item-tbl-body">
+            </tbody>
+        </table>
+
+    </section>
+
+</section>
+
+
+<section id="order" class="order">
+
+    <section>
+        <h1 class="display-1">Order</h1>
+        <img src="assets/img/order.png" alt="...">
+        <section>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    Customer ID
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+            </div>
+
+            <div class="mb-3">
+                <label for="customer_name" class="form-label">Customer Name</label>
+                <input id="customer_name" type="text" class="form-control" id="customer_name">
+            </div>
+            <div class="mb-3">
+                <label for="customer_contact" class="form-label">Contact</label>
+                <input id="customer_contact" type="text" class="form-control" id="customer_contact">
+            </div>
+        </section>
+
+    </section>
+
+    <section>
+        <form class="row g-4">
+            <div class="col-auto">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false" id="item_id_combo">
+                        Item ID
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-auto">
+                <label for="item_desc" class="form-label">Description</label>
+                <input id="item_desc" type="text" class="form-control">
+            </div>
+            <div class="col-auto">
+                <label for="item_price" class="form-label">Price</label>
+                <input id="item_price" type="text" class="form-control">
+            </div>
+            <div class="col-auto">
+                <label for="item_qty" class="form-label">Qty.on Hand</label>
+                <input id="item_qty" type="text" class="form-control">
+            </div>
+            <div class="col-auto">
+                <label for="total" class="form-label">Total</label>
+                <input id="total" type="text" class="form-control">
+            </div>
+            <div class="col-auto">
+                <label for="buy_qty" class="form-label">Qty</label>
+                <input id="buy_qty" type="text" class="form-control">
+            </div>
+
+            </div>
+            <button id="add_cart" type="button" class="btn btn-success">+Cart</button>
+            <button id="remove" type="button" class="btn btn-danger">Remove</button>
+        </form>
+        <section id="order_table">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Item_ID</th>
+                    <th scope="col">Desc</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Qty.</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+        </section>
+        <section id="complete_order">
+
+            <div class="col-auto">
+                <label for="final_total" class="form-label">Total</label>
+                <input id="final_total" type="text" class="form-control">
+            </div>
+
+            <button id="place_ord" type="button" class="btn btn-success">+Place Order</button>
+        </section>
+    </section>
+
+
+</section>
+
+
+<script src="assets/fontawesome/js/all.min.js"></script>
+<script src="assets/lib/jquery.min.js"></script>
+
+<script src="controller/home_section_controller.js"></script>
+<script type="module" src="controller/customer_section_controller.js"></script>
+<script type="module" src="controller/item_section_controller.js"></script>
+
+</body>
+</html>
