@@ -2,6 +2,7 @@ import {customer_db, item_db, order_db} from "../db/db.js";
 import {ItemModel} from "../model/ItemModel.js";
 import {OrderModel} from "../model/OrderModel.js";
 import { loadItemData } from "./item_section_controller.js";
+import { loadOrderCards } from "./order_details_controller.js";
 
 var row_index = null;
 
@@ -304,6 +305,7 @@ $('#place_ord').on('click', () => {
     let orderModel = new OrderModel(order_id, customer_id, total, items,date);
     order_db.push(orderModel);
     toastr.success('Order placed successfully...🎁')
+    loadOrderCards()
 
     $('#order_table_body').empty();
     $('#final_total').val('')

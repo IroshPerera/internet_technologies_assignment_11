@@ -56,4 +56,6 @@ const loadOrderCards = () => {
 };
 
 // Call the loadOrderCards function to generate the order cards
-setInterval(loadOrderCards, 1)
+
+loadOrderCards();
+export {loadOrderCards}
