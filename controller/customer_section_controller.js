@@ -14,14 +14,13 @@ const loadStudentData = () => {
 };
 
 
-
 // save
 $("#save_customer[type='button']").on("click", () => {
     let cust_id = $("#cust_id").val();
     let validity = -1;
     validity = customer_db.findIndex(item => item.customer_id === cust_id);
 
-    if(validity===-1) {
+    if (validity === -1) {
 
 
         let name = $("#name").val();
@@ -38,9 +37,12 @@ $("#save_customer[type='button']").on("click", () => {
 
         // load student data
         loadStudentData();
+        toastr.success("Customer successfully added...✅");
 
-    }else {
-        window.alert("Customer ID is Already Exist :(");
+
+    } else {
+        toastr.error("Customer ID already exists...❌");
+
     }
 
 
@@ -65,7 +67,7 @@ $("#update_customer[type='button']").on("click", () => {
 
     // clear();
     $("#customer_reset[type='reset']").click();
-
+    toast.success("Customer successfully updated...✅");
     // load student data
     loadStudentData();
 })
@@ -86,7 +88,7 @@ $("#delete_customer[type='button']").on("click", () => {
     loadStudentData();
 })
 
-$("#customer-tbl-body").on("click", "tr", function() {
+$("#customer-tbl-body").on("click", "tr", function () {
     row_index = $(this).index();
 
     console.log(row_index);

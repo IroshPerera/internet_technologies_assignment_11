@@ -98,7 +98,7 @@ $("#item-tbl-body").on("click", "tr", function() {
     $("#price").val(price);
     $("#qty").val(qty);
 })
-
-setInterval(loadItemData,0.5)
+loadItemData();
+export {loadItemData}
 
 

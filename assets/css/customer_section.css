@@ -6,6 +6,10 @@
     /* background: lightgreen;*/
 }
 
+.table.table-info {
+    cursor: pointer;
+}
+
 .customer > section:first-child {
 
     height: 80vh;

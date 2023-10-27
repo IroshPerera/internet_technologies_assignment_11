@@ -6,6 +6,9 @@
     /* background: lightgreen;*/
 }
 
+.table.table-success {
+    cursor: pointer;
+}
 .item > section:first-child {
 
     height: 80vh;

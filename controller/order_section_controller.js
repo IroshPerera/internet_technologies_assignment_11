@@ -1,6 +1,7 @@
 import {customer_db, item_db, order_db} from "../db/db.js";
 import {ItemModel} from "../model/ItemModel.js";
 import {OrderModel} from "../model/OrderModel.js";
+import { loadItemData } from "./item_section_controller.js";
 
 var row_index = null;
 
@@ -140,6 +141,7 @@ $('#add_cart').on('click', () => {
 
                     $(this).closest('tr').find('.qty').text(newQty);
                     $(this).closest('tr').find('.total').text(newTotal);
+                    loadItemData();
                 }
                 // Check if quantity is non-negative
 
@@ -172,6 +174,13 @@ $('#add_cart').on('click', () => {
                 // update item in the db
                 let item_object = item_db[index]
                 item_object.item_price -= parseInt(qty);
+
+                // other_js_file.js
+
+
+// Now you can call the loadItem function
+                loadItemData();
+
             }
             // Check if quantity is non-negative
 
