@@ -10,7 +10,10 @@
     <link rel="stylesheet" href="assets/css/customer_section.css">
     <link rel="stylesheet" href="assets/css/item_section.css">
     <link rel="stylesheet" href="assets/css/order_section.css">
+    <link rel="stylesheet" href="assets/css/order_details_section.css">
     <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 
 </head>
 <body>
@@ -133,7 +136,7 @@
             <section id="item_details">
                 <div class="mb-3">
                     <label for="item_id" class="form-label">Item ID</label>
-                    <input id="item_id" type="number" class="form-control" id="item_id"
+                    <input id="item_id" type="text" class="form-control" id="item_id"
                            aria-describedby="emailHelp">
                 </div>
 
@@ -193,27 +196,23 @@
 
     <section>
         <h1 class="display-1">Order</h1>
+        <button type="button" class="btn btn-primary" id="btn_recent_orders">Recent Orders</button>
+        <h1 class="display-6" id="order_id" >O001</h1>
         <img src="assets/img/order.png" alt="...">
         <section>
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                    Customer ID
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
+            <div class="form-group">
+                <label for="cmbCustomers">Customer ID</label>
+                <select class="form-control" id="cmbCustomers">
+                </select>
             </div>
 
             <div class="mb-3">
                 <label for="customer_name" class="form-label">Customer Name</label>
-                <input id="customer_name" type="text" class="form-control" id="customer_name">
+                <input id="customer_name" type="text" class="form-control" id="customer_name" readonly>
             </div>
             <div class="mb-3">
                 <label for="customer_contact" class="form-label">Contact</label>
-                <input id="customer_contact" type="text" class="form-control" id="customer_contact">
+                <input id="customer_contact" type="text" class="form-control" id="customer_contact" readonly>
             </div>
         </section>
 
@@ -222,38 +221,34 @@
     <section>
         <form class="row g-4">
             <div class="col-auto">
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false" id="item_id_combo">
-                        Item ID
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
+                <div class="form-group" >
+                    <label for="cmbItemId">Item ID</label>
+                    <select class="form-control" id="cmbItemId">
+                    </select>
                 </div>
             </div>
             <div class="col-auto">
                 <label for="item_desc" class="form-label">Description</label>
-                <input id="item_desc" type="text" class="form-control">
+                <input id="item_desc" type="text" class="form-control" readonly>
             </div>
             <div class="col-auto">
                 <label for="item_price" class="form-label">Price</label>
-                <input id="item_price" type="text" class="form-control">
+                <input id="item_price" type="text" class="form-control" readonly>
             </div>
             <div class="col-auto">
                 <label for="item_qty" class="form-label">Qty.on Hand</label>
-                <input id="item_qty" type="text" class="form-control">
+                <input id="item_qty" type="text" class="form-control" readonly>
             </div>
             <div class="col-auto">
                 <label for="total" class="form-label">Total</label>
-                <input id="total" type="text" class="form-control">
+                <input id="total" type="text" class="form-control" readonly>
             </div>
             <div class="col-auto">
                 <label for="buy_qty" class="form-label">Qty</label>
                 <input id="buy_qty" type="text" class="form-control">
             </div>
+
+
 
             </div>
             <button id="add_cart" type="button" class="btn btn-success">+Cart</button>
@@ -270,7 +265,7 @@
 
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="order_table_body">
                 </tbody>
             </table>
 
@@ -279,7 +274,7 @@
 
             <div class="col-auto">
                 <label for="final_total" class="form-label">Total</label>
-                <input id="final_total" type="text" class="form-control">
+                <input id="final_total" type="text" class="form-control" readonly>
             </div>
 
             <button id="place_ord" type="button" class="btn btn-success">+Place Order</button>
@@ -290,12 +285,39 @@
 </section>
 
 
+<section class="order_details">
+
+    <section class="order_details_cards" style="display: flex; flex-wrap: wrap; justify-content: center; position: relative; top: 100px;">
+        <div class="card border-primary mb-3">
+            <!--<div class="card-header">Order Details</div>-->
+            <div class="card-body text-primary">
+                <h5 class="card-title">Order ID: O001</h5>
+                <p class="card-text">Order Date: October 26, 2023</p>
+                <p class="card-text">Customer ID: C001</p>
+                <p class="card-text">Items: Item 1, Item 2, Item 3</p>
+                <p class="card-text">Total: $500.00</p>
+            </div>
+        </div>
+
+
+    </section>
+
+
+</section>
+
+
 <script src="assets/fontawesome/js/all.min.js"></script>
 <script src="assets/lib/jquery.min.js"></script>
+
+
 
 <script src="controller/home_section_controller.js"></script>
 <script type="module" src="controller/customer_section_controller.js"></script>
 <script type="module" src="controller/item_section_controller.js"></script>
+<script type="module" src="controller/order_section_controller.js"></script>
+<script type="module" src="controller/order_details_controller.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
 </html>
