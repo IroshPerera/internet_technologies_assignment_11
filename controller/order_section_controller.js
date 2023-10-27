@@ -238,14 +238,6 @@ $('#remove').on("click", () => {
 
 
     // Iterate through the cells in the row and get their values
-    $row.find(".total").each(function () {
-        var cell_value = parseFloat($(this).text()); // Assuming the value is a number
-        let final_total = $('#final_total').val();
-        console.log(cell_value)
-        final_total -= cell_value;
-        $('#final_total').val(final_total);
-
-    });
 
 
     Swal.fire({
@@ -260,6 +252,48 @@ $('#remove').on("click", () => {
         if (result.isConfirmed) {
 
             $("#order_table_body tr").eq(row_index).remove();
+            $row.find(".total").each(function () {
+                var cell_value = parseFloat($(this).text()); // Assuming the value is a number
+                let final_total = $('#final_total').val();
+                console.log(cell_value)
+                final_total -= cell_value;
+                $('#final_total').val(final_total);
+
+            });
+
+            /*$row.find(".item_id").each(function () {
+
+                var item_id = $(this).text(); // Assuming the value is a number
+
+
+                $row.find(".qty").each(function () {
+
+                    var qty = parseInt($(this).text()); // Assuming the value is a number
+                    console.log(row_index)
+
+                    for (let i = 0; i < item_db.length; i++) {
+
+                        if (item_db[i].item_id === item_id) {
+
+                            let itemModel = item_db[i];
+
+                            console.log(itemModel)
+                            /!*let price = itemModel.item_price.val();*!/
+
+
+                            return;
+                        }
+
+                    }
+
+
+
+                    loadItemData()
+
+                })
+            })*/
+
+
             Swal.fire(
                 'Removed from Cart',
                 'The item has been successfully removed from your cart.',
