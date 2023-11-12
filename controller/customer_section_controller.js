@@ -3,6 +3,11 @@ import {CustomerModel} from "../model/CustomerModel.js";
 
 var row_index = null;
 
+const customerIdPattern = /^C\d+$/;
+const regexCustID = new RegExp(customerIdPattern);
+
+const sriLankanMobileNumberRegex = /^(\+94|0)[1-9][0-9]{8}$/;
+const regMobile = new RegExp(sriLankanMobileNumberRegex);
 
 const loadStudentData = () => {
     $('#customer-tbl-body').empty(); // make tbody empty
@@ -21,23 +26,56 @@ $("#save_customer[type='button']").on("click", () => {
     validity = customer_db.findIndex(item => item.customer_id === cust_id);
 
     if (validity === -1) {
-
-
         let name = $("#name").val();
         let address = $("#address").val();
         let contact = $("#contact").val();
 
-        let customer_object = new CustomerModel(cust_id, name, address, contact);
+        if (cust_id) {
+            if (regexCustID.test(cust_id)) {
+                if (name) {
+                    if (address) {
+                        if (contact) {
+                            if (regMobile.test(contact)) {
 
-        // save in the db
-        customer_db.push(customer_object);
 
-        // clear();
-        $("#customer_reset[type='reset']").click();
+                                let customer_object = new CustomerModel(cust_id, name, address, contact);
 
-        // load student data
-        loadStudentData();
-        toastr.success("Customer successfully added...✅");
+                                // save in the db
+                                customer_db.push(customer_object);
+
+                                // clear();
+                                $("#customer_reset[type='reset']").click();
+
+                                // load student data
+                                loadStudentData();
+                                toastr.success("Customer successfully added...✅");
+
+                            } else {
+                                toastr.error("Invalid Contact Number...❌");
+                                return;
+                            }
+                        } else {
+                            toastr.error("Contact Number is empty...❌");
+                            return;
+                        }
+                    } else {
+                        toastr.error("Address is empty...❌");
+                        return;
+                    }
+                } else {
+                    toastr.error("Name is empty...❌");
+                    return;
+                }
+            } else {
+                toastr.error("Invalid Customer ID...❌");
+                return;
+            }
+
+
+        } else {
+            toastr.error("Customer ID is empty...❌");
+            return;
+        }
 
 
     } else {
@@ -57,19 +95,49 @@ $("#update_customer[type='button']").on("click", () => {
     let contact = $("#contact").val();
 
 
-    let customer_object = new CustomerModel(cust_id, name, address, contact);
+    if (cust_id) {
+        if (regexCustID.test(cust_id)) {
+            if (name) {
+                if (address) {
+                    if (contact) {
+                        if (regMobile.test(contact)) {
 
-    // find item index
-    let index = customer_db.findIndex(item => item.customer_id === cust_id);
+                            let customer_object = new CustomerModel(cust_id, name, address, contact);
 
-    // update item in the db
-    customer_db[index] = customer_object;
+                            // update the db
+                            customer_db.splice(row_index, 1, customer_object);
 
-    // clear();
-    $("#customer_reset[type='reset']").click();
-    toast.success("Customer successfully updated...✅");
-    // load student data
-    loadStudentData();
+                            // clear();
+                            $("#customer_reset[type='reset']").click();
+
+                            // load student data
+                            loadStudentData();
+                            toastr.success("Customer successfully updated...✅");
+
+                        } else {
+                            toastr.error("Invalid Contact Number...❌");
+                            return;
+                        }
+                    } else {
+                        toastr.error("Contact Number is empty...❌");
+                        return;
+                    }
+                } else {
+                    toastr.error("Address is empty...❌");
+                    return;
+                }
+            } else {
+                toastr.error("Name is empty...❌");
+                return;
+            }
+        } else {
+            toastr.error("Invalid Customer ID...❌");
+            return;
+        }
+    }
+
+
+
 })
 
 // delete

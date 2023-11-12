@@ -4,6 +4,12 @@ import {ItemModel} from "../model/ItemModel.js";
 
 var row_index = null;
 
+const quantityRegex = /^\d+$/;
+const regQuantity = new RegExp(quantityRegex);
+
+const priceRegex = /^\$?\d+(,\d{3})*(\.\d{2})?$/;
+const regPrice = new RegExp(priceRegex);
+
 const loadItemData = () => {
     $('#item-tbl-body').empty(); // make tbody empty
     item_db.map((item, index) => {
@@ -28,16 +34,56 @@ $("#save_item[type='button']").on("click", () => {
         let price = $("#price").val();
         let qty = $("#qty").val();
 
-        let item_object = new ItemModel(item_id, desc, price, qty);
+        if (item_id) {
+            if (desc) {
+                if (price) {
+                    if (regPrice.test(price)) {
+                        if (qty) {
+                            if (regQuantity.test(qty)) {
 
-        // save in the db
-        item_db.push(item_object);
 
-        // clear();
-        $("#item_reset[type='reset']").click();
+                                // clear();
+                                $("#item_reset[type='reset']").click();
 
-        // load student data
-        loadItemData();
+                                let item_object = new ItemModel(item_id, desc, price, qty);
+
+                                // save in the db
+                                item_db.push(item_object);
+
+                                // clear();
+                                $("#item_reset[type='reset']").click();
+
+                                // load student data
+                                loadItemData();
+                                toastr.success("Item successfully added...✅");
+                            } else {
+                                toastr.error("Invalid Quantity...❌");
+
+                            }
+                        } else {
+                            toastr.error("Quantity is empty...❌");
+
+                        }
+                    } else {
+                        toastr.error("Invalid Price...❌");
+
+                    }
+                } else {
+                    toastr.error("Price is empty...❌");
+
+                }
+            } else {
+                toastr.error("Description is empty...❌");
+
+            }
+        } else {
+            toastr.error("Item ID is empty...❌");
+
+        }
+
+
+
+
 
     }else {
         window.alert("Item ID is Already Exist :(");
