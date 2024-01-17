@@ -1,27 +1,58 @@
-import {customer_db, item_db, order_db} from "../db/db.js";
+
 import {ItemModel} from "../model/ItemModel.js";
 import {OrderModel} from "../model/OrderModel.js";
-import { loadItemData } from "./item_section_controller.js";
-import { loadOrderCards } from "./order_details_controller.js";
 
 var row_index = null;
 
-$('#cmbCustomers').on('click', () => {
-    customer_db.forEach(customer => {
-        // Check if an option with the same customer_id already exists
-        const isCustomerAdded = Array.from(document.getElementById('cmbCustomers').options).some(option => {
-            const existingCustomer = JSON.parse(option.value);
-            return existingCustomer.customer_id === customer.customer_id;
-        });
+let  response =null;
 
-        if (!isCustomerAdded) {
-            // If the customer with the same customer_id doesn't exist, add a new option
-            const option = document.createElement("option");
-            option.value = JSON.stringify(customer);
-            option.text = customer.customer_id;
-            document.getElementById('cmbCustomers').appendChild(option);
+let highestOrderNumber = 0;
+
+
+$('#cmbCustomers').on('click', () => {
+
+    const http = new XMLHttpRequest();
+
+    //Step 02 -
+    http.onreadystatechange = () =>
+    {
+        //validate readyState and status
+        if (http.readyState === 4 && http.status === 200) {
+            console.log("Success");
+            http.addEventListener('load',function(){
+                const res =   JSON.parse(http.responseText);
+                console.log(res);
+                res.forEach(customer => {
+                        // Check if an option with the same customer_id already exists
+                        const isCustomerAdded = Array.from(document.getElementById('cmbCustomers').options).some(option => {
+                            const existingCustomer = JSON.parse(option.value);
+                            return existingCustomer.customer_id === customer.customer_id;
+                        });
+                
+                        if (!isCustomerAdded) {
+                            // If the customer with the same customer_id doesn't exist, add a new option
+                            const option = document.createElement("option");
+                            option.value = JSON.stringify(customer);
+                            option.text = customer.customer_id;
+                            document.getElementById('cmbCustomers').appendChild(option);
+                        }
+                   
+                });
+          
+              })
+            
+           
+        }else {
+            console.log("Failed");
         }
-    });
+    }
+
+    http.open("GET","http://localhost:8080/pos/customer",true);   
+
+    http.send();
+
+
+    
 });
 $('#cmbCustomers').on('change', () => {
     const selectedOption = $('#cmbCustomers option:selected');
@@ -41,24 +72,50 @@ $('#cmbCustomers').on('change', () => {
     }
 });
 $('#cmbItemId').on('click', () => {
-    item_db.forEach(item => {
-        // Check if an option with the same customer_id already exists
-        const isItemAdded = Array.from(document.getElementById('cmbItemId').options).some(option => {
-            const existingCustomer = JSON.parse(option.value);
-            return existingCustomer.item_id === item.item_id;
-        });
 
-        if (!isItemAdded) {
-            // If the customer with the same customer_id doesn't exist, add a new option
-            const option = document.createElement("option");
-            option.value = JSON.stringify(item);
-            option.text = item.item_id;
-            document.getElementById('cmbItemId').appendChild(option);
+
+    const http = new XMLHttpRequest();
+
+    //Step 02 -
+    http.onreadystatechange = () =>
+    {
+        //validate readyState and status
+        if (http.readyState === 4 && http.status === 200) {
+            console.log("Success");
+            http.addEventListener('load',function(){
+               response =   JSON.parse(http.responseText);
+                //console.log(res);
+                 response.forEach(item => {
+                    // Check if an option with the same customer_id already exists
+                    const isItemAdded = Array.from(document.getElementById('cmbItemId').options).some(option => {
+                        const existingCustomer = JSON.parse(option.value);
+                        return existingCustomer.item_id === item.item_id;
+                    });
+            
+                    if (!isItemAdded) {
+                        // If the customer with the same customer_id doesn't exist, add a new option
+                        const option = document.createElement("option");
+                        option.value = JSON.stringify(item);
+                        option.text = item.item_id;
+                        document.getElementById('cmbItemId').appendChild(option);
+                    }
+                });
+            })
+            
+           
+        }else {
+            console.log("Failed");
         }
-    });
+    }
+
+    http.open("GET","http://localhost:8080/pos/item",true);   
+
+    http.send();
 });
+
 $('#cmbItemId').on('change', () => {
     let item_id = $('#cmbItemId option:selected').text();
+    
 
     if (item_id) {
 
@@ -68,16 +125,19 @@ $('#cmbItemId').on('change', () => {
         let qty = 0;
 
 
-        for (let i = 0; i < item_db.length; i++) {
-            if (item_db[i].item_id === item_id) {
-                foundItem = item_db[i];
-                console.log(foundItem)
-                description = foundItem.item_description;
-                price = foundItem.item_price;
-                qty = foundItem.qty;
-                break; // Exit the loop when the item is found
-            }
-        }
+
+                    for (let i = 0; i < response.length; i++) {
+                        if (response[i].item_id === item_id) {
+                            foundItem = response[i];
+                            console.log(foundItem)
+                            description = foundItem.descr;
+                           price = foundItem.price;
+                           qty = foundItem.qty;
+                            break; // Exit the loop when the item is found
+                        }
+                    }
+            
+      
 
 
         $('#item_desc').val(description);
@@ -124,7 +184,7 @@ $('#add_cart').on('click', () => {
             let newTotal = existingTotal + add_total;
 
 
-            let selectedItem = item_db.find(item => item.item_id === item_id);
+            let selectedItem = response.find(item => item.item_id === item_id);
 
             if (selectedItem) {
 
@@ -134,15 +194,15 @@ $('#add_cart').on('click', () => {
                 } else {
                     // Update the item_db to reduce the quantity
                     selectedItem.qty -= qty;
-                    let index = item_db.findIndex(item => item.item_id === item_id);
+                    let index = response.findIndex(item => item.item_id === item_id);
 
                     // update item in the db
-                    let item_object = item_db[index]
-                    item_object.item_price -= qty;
+                    let item_object = response  [index]
+                    item_object.price -= qty;
 
                     $(this).closest('tr').find('.qty').text(newQty);
                     $(this).closest('tr').find('.total').text(newTotal);
-                    loadItemData();
+                    //loadItemData();
                 }
                 // Check if quantity is non-negative
 
@@ -160,7 +220,7 @@ $('#add_cart').on('click', () => {
         let qty = $('#buy_qty').val();
 
         // Find the item in item_db by its item_id
-        let selectedItem = item_db.find(item => item.item_id === item_id);
+        let selectedItem = response.find(item => item.item_id === item_id);
 
         if (selectedItem) {
 
@@ -170,17 +230,17 @@ $('#add_cart').on('click', () => {
             } else {
                 // Update the item_db to reduce the quantity
                 selectedItem.qty -= parseInt(qty);
-                let index = item_db.findIndex(item => item.item_id === item_id);
+                let index = response.findIndex(item => item.item_id === item_id);
 
                 // update item in the db
-                let item_object = item_db[index]
+                let item_object = response[index]
                 item_object.item_price -= parseInt(qty);
 
                 // other_js_file.js
 
 
 // Now you can call the loadItem function
-                loadItemData();
+               // loadItemData();
 
             }
             // Check if quantity is non-negative
@@ -325,9 +385,9 @@ $('#place_ord').on('click', () => {
         let item_id = row.find('.item_id').text();
         let desc = row.find('.desc').text();
         let qty = row.find('.qty').text();
-        let total = row.find('.total').text();
+        let price = row.find('.total').text();
 
-        itemModel = new ItemModel(item_id, desc, total,qty);
+        itemModel = new ItemModel(item_id, desc, price,qty);
 
 
 
@@ -337,43 +397,109 @@ $('#place_ord').on('click', () => {
 
 
     let orderModel = new OrderModel(order_id, customer_id, total, items,date);
-    order_db.push(orderModel);
+   // order_db.push(orderModel);
+
+   const orderJSON = JSON.stringify(orderModel);
+   console.log(orderJSON);
+   sendAjax(orderJSON);
+
+   //send data to backend using AJAX
+
+   
+
+
+   function sendAjax(orderJSON) {
+
+       //AJAX
+       //Step 01 - create an XMLHttpRequest object
+       const http = new XMLHttpRequest();
+
+       //Step 02 -
+       http.onreadystatechange = () =>
+       {
+           //validate readyState and status
+           if (http.readyState === 4 && http.status === 200) {
+               console.log("Success");
+           }else {
+               console.log("Failed");
+           }
+       }
+
+       http.open("POST","http://localhost:8080/pos/order",true);
+       http.setRequestHeader("Content-Type","application/json");
+       http.send(orderJSON);
+   }
+
+
     toastr.success('Order placed successfully...🎁')
-    loadOrderCards()
+  //  loadOrderCards()
 
     $('#order_table_body').empty();
     $('#final_total').val('')
 
     const newOrderID = generateOrderID();
-    $('#order_id').text(newOrderID);
+    
 
-    console.log(order_db)
+
 });
 
 
 
 function findHighestOrderNumber() {
-    let highestOrderNumber = 0;
+    
 
-    for (const order of order_db) {
-        const orderNumber = parseInt(order.order_id.slice(1), 10);
-        if (!isNaN(orderNumber) && orderNumber > highestOrderNumber) {
-            highestOrderNumber = orderNumber;
+
+    const http = new XMLHttpRequest();
+
+    //Step 02 -
+    http.onreadystatechange = () =>
+    {
+        //validate readyState and status
+        if (http.readyState === 4 && http.status === 200) {
+            console.log("Success");
+            http.addEventListener('load',function(){
+                const res =   JSON.parse(http.responseText);
+                console.log(res);
+                
+                for (const order of res) {
+                    const orderNumber = parseInt(order.order_id.slice(1), 10);
+                    
+                    if (!isNaN(orderNumber) && orderNumber > highestOrderNumber) {
+                        highestOrderNumber = orderNumber;
+                        console.log(highestOrderNumber);
+                        const nextOrderNumber = highestOrderNumber + 1;
+   
+
+                        // Format the order number with leading zeros and "O" prefix
+                        const orderID = 'O' + nextOrderNumber.toString().padStart(3, '0');
+                        console.log(orderID);
+                        $('#order_id').text(orderID);
+                    
+          
+                    }
+                }
+            
+               
+              })
+            
+           
+        }else {
+            console.log("Failed");
         }
     }
 
-    return highestOrderNumber;
+    http.open("GET","http://localhost:8080/pos/order",true);   
+
+
+    http.send();
+
+
 }
 
 // Function to generate the next order ID
 function generateOrderID() {
-    const lastOrderNumber = findHighestOrderNumber();
-    const nextOrderNumber = lastOrderNumber + 1;
-
-    // Format the order number with leading zeros and "O" prefix
-    const orderID = 'O' + nextOrderNumber.toString().padStart(3, '0');
-
-    return orderID;
+    findHighestOrderNumber();
+   
 }
 
 
@@ -387,6 +513,6 @@ $('#btn_recent_orders').on('click', () => {
     $('#item').css('display', 'none');
 })
 
-
+generateOrderID();
 
 

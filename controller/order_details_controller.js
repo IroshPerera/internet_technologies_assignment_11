@@ -1,5 +1,3 @@
-import {order_db} from "../db/db.js";
-
 const loadOrderCards = () => {
     const orderDetailsSection = document.querySelector(".order_details_cards");
 
@@ -57,5 +55,5 @@ const loadOrderCards = () => {
 
 // Call the loadOrderCards function to generate the order cards
 
-loadOrderCards();
-export {loadOrderCards}
+//loadOrderCards();
+//export {loadOrderCards}

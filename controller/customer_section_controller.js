@@ -1,4 +1,3 @@
-import {customer_db} from "../db/db.js";
 import {CustomerModel} from "../model/CustomerModel.js";
 
 var row_index = null;
@@ -9,21 +8,55 @@ const regexCustID = new RegExp(customerIdPattern);
 const sriLankanMobileNumberRegex = /^(\+94|0)[1-9][0-9]{8}$/;
 const regMobile = new RegExp(sriLankanMobileNumberRegex);
 
-const loadStudentData = () => {
+const loadCustomerData = () => {
     $('#customer-tbl-body').empty(); // make tbody empty
-    customer_db.map((item, index) => {
-        let record = `<tr><td class="customer_id">${item.customer_id}</td><td class="name">${item.name}</td><td class="address">${item.address}
-        </td><td class="contact">${item.contact}</td></tr>`;
-        $("#customer-tbl-body").append(record);
-    });
+   
+
+    const http = new XMLHttpRequest();
+
+    //Step 02 -
+    http.onreadystatechange = () =>
+    {
+        //validate readyState and status
+        if (http.readyState === 4 && http.status === 200) {
+            console.log("Success");
+            http.addEventListener('load',function(){
+                const res =   JSON.parse(http.responseText);
+                console.log(res);
+                res.map((item, index) => {
+                    let record = `<tr><td class="customer_id">${item.customer_id}</td><td class="name">${item.name}</td><td class="address">${item.address}
+                    </td><td class="contact">${item.contact}</td></tr>`;
+                    $("#customer-tbl-body").append(record);
+                });
+          
+              })
+            
+           
+        }else {
+            console.log("Failed");
+        }
+    }
+
+    http.open("GET","http://localhost:8080/pos/customer",true);   
+
+    http.send();
+
+   
+
+
 };
+
+
+
+
+
 
 
 // save
 $("#save_customer[type='button']").on("click", () => {
     let cust_id = $("#cust_id").val();
     let validity = -1;
-    validity = customer_db.findIndex(item => item.customer_id === cust_id);
+
 
     if (validity === -1) {
         let name = $("#name").val();
@@ -38,16 +71,69 @@ $("#save_customer[type='button']").on("click", () => {
                             if (regMobile.test(contact)) {
 
 
-                                let customer_object = new CustomerModel(cust_id, name, address, contact);
-
+                
                                 // save in the db
-                                customer_db.push(customer_object);
+                                //get data from form fields
+                               
+
+    console.log(cust_id);
+    console.log(name);
+    console.log(address);
+    console.log(contact);
+
+
+    //create an object for accumulate data
+    const customerData = {
+        customer_id : cust_id,
+        name: name,
+        address: address,
+        contact: contact
+    }
+
+    console.log(customerData);
+
+    //send data to backend
+
+    //create jason object
+    const customerJSON = JSON.stringify(customerData);
+    console.log(customerJSON);
+    sendAjax(customerJSON);
+
+    //send data to backend using AJAX
+
+    
+
+
+    function sendAjax(customerJSON) {
+
+        //AJAX
+        //Step 01 - create an XMLHttpRequest object
+        const http = new XMLHttpRequest();
+
+        //Step 02 -
+        http.onreadystatechange = () =>
+        {
+            //validate readyState and status
+            if (http.readyState === 4 && http.status === 200) {
+                console.log("Success");
+            }else {
+                console.log("Failed");
+            }
+        }
+
+        http.open("POST","http://localhost:8080/pos/customer",true);
+        http.setRequestHeader("Content-Type","application/json");
+        http.send(customerJSON);
+    }
+
+
+
 
                                 // clear();
                                 $("#customer_reset[type='reset']").click();
 
                                 // load student data
-                                loadStudentData();
+                                loadCustomerData();
                                 toastr.success("Customer successfully added...✅");
 
                             } else {
@@ -102,16 +188,70 @@ $("#update_customer[type='button']").on("click", () => {
                     if (contact) {
                         if (regMobile.test(contact)) {
 
-                            let customer_object = new CustomerModel(cust_id, name, address, contact);
 
                             // update the db
-                            customer_db.splice(row_index, 1, customer_object);
+                         
+                                
+
+                            // save in the db
+                            //get data from form fields
+                           
+
+console.log(cust_id);
+console.log(name);
+console.log(address);
+console.log(contact);
+
+
+//create an object for accumulate data
+const customerData = {
+    customer_id : cust_id,
+    name: name,
+    address: address,
+    contact: contact
+}
+
+console.log(customerData);
+
+//send data to backend
+
+//create jason object
+const customerJSON = JSON.stringify(customerData);
+console.log(customerJSON);
+sendAjax(customerJSON);
+
+//send data to backend using AJAX
+
+
+
+
+function sendAjax(customerJSON) {
+
+    //AJAX
+    //Step 01 - create an XMLHttpRequest object
+    const http = new XMLHttpRequest();
+
+    //Step 02 -
+    http.onreadystatechange = () =>
+    {
+        //validate readyState and status
+        if (http.readyState === 4 && http.status === 200) {
+            console.log("Success");
+        }else {
+            console.log("Failed");
+        }
+    }
+
+    http.open("PUT","http://localhost:8080/pos/customer",true);
+    http.setRequestHeader("Content-Type","application/json");
+    http.send(customerJSON);
+}
 
                             // clear();
                             $("#customer_reset[type='reset']").click();
 
                             // load student data
-                            loadStudentData();
+                            loadCustomerData();
                             toastr.success("Customer successfully updated...✅");
 
                         } else {
@@ -143,17 +283,55 @@ $("#update_customer[type='button']").on("click", () => {
 // delete
 $("#delete_customer[type='button']").on("click", () => {
     let cust_id = $("#cust_id").val();
-
-    // find item index
-    let index = customer_db.findIndex(item => item.customer_id === cust_id);
-
     // remove the item from the db
-    customer_db.splice(index, 1);
+
+    const customerData = {
+        customer_id : cust_id,
+    }
+
+    console.log(customerData);
+
+    //send data to backend
+
+    //create jason object
+    const customerJSON = JSON.stringify(customerData);
+    console.log(customerJSON);
+    sendAjax(customerJSON);
+
+    //send data to backend using AJAX
+
+    
+
+
+    function sendAjax(customerJSON) {
+
+        //AJAX
+        //Step 01 - create an XMLHttpRequest object
+        const http = new XMLHttpRequest();
+
+        //Step 02 -
+        http.onreadystatechange = () =>
+        {
+            //validate readyState and status
+            if (http.readyState === 4 && http.status === 200) {
+                console.log("Success");
+            }else {
+                console.log("Failed");
+            }
+        }
+
+        http.open("DELETE","http://localhost:8080/pos/customer",true);
+        http.setRequestHeader("Content-Type","application/json");
+        http.send(customerJSON);
+    }
+
+
+    
 
     $("#customer_reset[type='reset']").click();
 
     // load student data
-    loadStudentData();
+    loadCustomerData();
 })
 
 $("#customer-tbl-body").on("click", "tr", function () {
@@ -172,4 +350,5 @@ $("#customer-tbl-body").on("click", "tr", function () {
     $("#contact").val(contact);
 
 });
-loadStudentData();
+
+loadCustomerData();

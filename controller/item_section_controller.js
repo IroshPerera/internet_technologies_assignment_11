@@ -1,4 +1,3 @@
-import {item_db} from "../db/db.js";
 import {ItemModel} from "../model/ItemModel.js";
 
 
@@ -10,13 +9,38 @@ const regQuantity = new RegExp(quantityRegex);
 const priceRegex = /^\$?\d+(,\d{3})*(\.\d{2})?$/;
 const regPrice = new RegExp(priceRegex);
 
+
 const loadItemData = () => {
     $('#item-tbl-body').empty(); // make tbody empty
-    item_db.map((item, index) => {
-        let record = `<tr><td class="item_id">${item.item_id}</td><td class="description">${item.item_description}</td><td class="price">${item.item_price}
-        </td><td class="qty">${item.qty}</td></tr>`;
-        $("#item-tbl-body").append(record);
-    });
+
+
+
+    const http = new XMLHttpRequest();
+
+    //Step 02 -
+    http.onreadystatechange = () =>
+    {
+        //validate readyState and status
+        if (http.readyState === 4 && http.status === 200) {
+            console.log("Success");
+            http.addEventListener('load',function(){
+                const res =   JSON.parse(http.responseText);
+                console.log(res);
+                 res.map((item, index) => {
+                let record = `<tr><td class="item_id">${item.item_id}</td><td class="description">${item.descr}</td><td class="price">${item.price}</td><td class="qty">${item.qty}</td></tr>`;
+                $("#item-tbl-body").append(record);
+            });
+            })
+            
+           
+        }else {
+            console.log("Failed");
+        }
+    }
+
+    http.open("GET","http://localhost:8080/pos/item",true);   
+
+    http.send();
 }
 
 
@@ -25,7 +49,7 @@ $("#save_item[type='button']").on("click", () => {
     let item_id = $("#item_id").val();
     console.log(item_id);
     let validity = -1;
-    validity = item_db.findIndex(item => item.item_id === item_id);
+   
 
     if(validity===-1) {
 
@@ -39,22 +63,58 @@ $("#save_item[type='button']").on("click", () => {
                 if (price) {
                     if (regPrice.test(price)) {
                         if (qty) {
+
                             if (regQuantity.test(qty)) {
+                                const itemData = {
+                                    item_id : item_id,
+                                    descr: desc,
+                                    price: price,
+                                    qty: qty
+                                }
+                            
+                                console.log(itemData);
+                            
+                                //send data to backend
+                            
+                                //create jason object
+                                const itemJSON = JSON.stringify(itemData);
+                                console.log(itemJSON);
+                                sendAjax(itemJSON);
+                            
+                                //send data to backend using AJAX
+                            
+                                
+                            
+                            
+                                function sendAjax(itemJSON) {
+                            
+                                    //AJAX
+                                    //Step 01 - create an XMLHttpRequest object
+                                    const http = new XMLHttpRequest();
+                            
+                                    //Step 02 -
+                                    http.onreadystatechange = () =>
+                                    {
+                                        //validate readyState and status
+                                        if (http.readyState === 4 && http.status === 200) {
+                                            console.log("Success");
+                                        }else {
+                                            console.log("Failed");
+                                        }
+                                    }
+                            
+                                    http.open("POST","http://localhost:8080/pos/item",true);
+                                    http.setRequestHeader("Content-Type","application/json");
+                                    http.send(itemJSON);
+                                }
+                            
 
-
-                                // clear();
-                                $("#item_reset[type='reset']").click();
-
-                                let item_object = new ItemModel(item_id, desc, price, qty);
-
-                                // save in the db
-                                item_db.push(item_object);
-
+                               
                                 // clear();
                                 $("#item_reset[type='reset']").click();
 
                                 // load student data
-                                loadItemData();
+                               // loadItemData();
                                 toastr.success("Item successfully added...✅");
                             } else {
                                 toastr.error("Invalid Quantity...❌");
@@ -101,13 +161,92 @@ $("#update_item[type='button']").on("click", () => {
     let qty = $("#qty").val();
 
 
-    let item_object = new ItemModel(item_id, desc, price, qty);
-
-    // find item index
-    let index = item_db.findIndex(item => item.item_id === item_id);
+   
 
     // update item in the db
-    item_db[index] = item_object;
+    if (item_id) {
+        if (desc) {
+            if (price) {
+                if (regPrice.test(price)) {
+                    if (qty) {
+
+                        if (regQuantity.test(qty)) {
+                            const itemData = {
+                                item_id : item_id,
+                                descr: desc,
+                                price: price,
+                                qty: qty
+                            }
+                        
+                            console.log(itemData);
+                        
+                            //send data to backend
+                        
+                            //create jason object
+                            const itemJSON = JSON.stringify(itemData);
+                            console.log(itemJSON);
+                            sendAjax(itemJSON);
+                        
+                            //send data to backend using AJAX
+                        
+                            
+                        
+                        
+                            function sendAjax(itemJSON) {
+                        
+                                //AJAX
+                                //Step 01 - create an XMLHttpRequest object
+                                const http = new XMLHttpRequest();
+                        
+                                //Step 02 -
+                                http.onreadystatechange = () =>
+                                {
+                                    //validate readyState and status
+                                    if (http.readyState === 4 && http.status === 200) {
+                                        console.log("Success");
+                                    }else {
+                                        console.log("Failed");
+                                    }
+                                }
+                        
+                                http.open("PUT","http://localhost:8080/pos/item",true);
+                                http.setRequestHeader("Content-Type","application/json");
+                                http.send(itemJSON);
+                            }
+                        
+
+                           
+                            // clear();
+                            $("#item_reset[type='reset']").click();
+
+                            // load student data
+                           // loadItemData();
+                            toastr.success("Item successfully added...✅");
+                        } else {
+                            toastr.error("Invalid Quantity...❌");
+
+                        }
+                    } else {
+                        toastr.error("Quantity is empty...❌");
+
+                    }
+                } else {
+                    toastr.error("Invalid Price...❌");
+
+                }
+            } else {
+                toastr.error("Price is empty...❌");
+
+            }
+        } else {
+            toastr.error("Description is empty...❌");
+
+        }
+    } else {
+        toastr.error("Item ID is empty...❌");
+
+    }
+ 
 
     // clear();
     $("#item_reset[type='reset']").click();
@@ -124,7 +263,7 @@ $("#delete_item[type='button']").on("click", () => {
     let index = item_db.findIndex(item => item.item_id === item_id);
 
     // remove the item from the db
-    item_db.splice(index, 1);
+
 
     $("#item_reset[type='reset']").click();
 
@@ -145,6 +284,6 @@ $("#item-tbl-body").on("click", "tr", function() {
     $("#qty").val(qty);
 })
 loadItemData();
-export {loadItemData}
+
 
 
